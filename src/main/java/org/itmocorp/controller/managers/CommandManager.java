@@ -2,6 +2,7 @@ package org.itmocorp.controller.managers;
 
 import org.itmocorp.controller.commands.*;
 import org.itmocorp.controller.handlers.InputHandler;
+import org.itmocorp.controller.handlers.ScriptHandler;
 import org.itmocorp.model.data.Product;
 import org.itmocorp.model.managers.CollectionManager;
 
@@ -126,9 +127,12 @@ public class CommandManager {
      */
 
     public static Product getProduct() {
-        Product product = InputHandler.ArgumentsReader();
+        Product product;
+        if (isScriptStatus())
+            product = ScriptHandler.getProductFromFile();
+        else
+            product = InputHandler.ArgumentsReader();
         return product;
-
     }
 
     /**

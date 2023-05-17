@@ -33,4 +33,8 @@ public abstract class AbstractCommand implements Serializable {
     public void setArgs(String[] args) {
         this.args = args;
     }
+
+    public String[] getArgs() {
+        return args;
+    }
 }
