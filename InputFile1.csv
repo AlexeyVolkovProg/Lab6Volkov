@@ -1,0 +1,6 @@
+ame, coordinateX, coordinateY, price, manufactureCost, unitOfMeasure, personName, personBirthday, personPassportId
+MacBook1,10,10,45000,30000,METERS,Alexey,10/05/2004,10000001
+MacBook2,10,10,60000,30000,METERS,Alexey,10/05/2004,10000002
+MacBook3,10,10,80000,30000,METERS,Alexey,10/05/2004,10000003
+MacBook3,10,10,70000,30000,METERS,Alexey,10/05/2004,1000000111
+MacBook3,10,10,1000000,30000,METERS,Alexey,10/05/2004,1000000112
