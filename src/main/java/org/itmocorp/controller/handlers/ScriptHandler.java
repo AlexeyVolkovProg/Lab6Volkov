@@ -1,5 +1,6 @@
 package org.itmocorp.controller.handlers;
 
+import org.itmocorp.Client;
 import org.itmocorp.controller.commands.AbstractCommand;
 import org.itmocorp.controller.managers.CommandManager;
 import org.itmocorp.model.data.Product;
@@ -17,7 +18,7 @@ public class ScriptHandler {
     private static String currentFilePath;
     private static final HashMap<String, Scanner> scannersMap = new HashMap<>();
 
-    public static void startFile(String filename) {
+    public static void startFile(String filename, Client client) {
         try {
             File file0 = new File(filename);
             String filepath = file0.getAbsolutePath();
@@ -33,7 +34,7 @@ public class ScriptHandler {
                 scannersMap.put(filepath, scanner);
                 while (scannersMap.get(filename).hasNextLine()) {
 
-                    lineHandler(scannersMap.get(filename).nextLine());
+                    lineHandler(scannersMap.get(filename).nextLine(), client);
                 }
                 CommandManager.setScriptStatus(false);
                 System.out.println("Выполнение файла " + file1.getName() + "было окончено.");
@@ -47,7 +48,7 @@ public class ScriptHandler {
     }
 
 
-    private static void lineHandler(String line) {
+    private static void lineHandler(String line, Client client) {
         try {
             String[] input = line.trim().split("\\s+", 2);
             String commandName = input[0];
@@ -66,13 +67,21 @@ public class ScriptHandler {
                         arg = new String[0];
                     }
                     command.setArgs(arg);
-                    CommandManager.ExecuteCommand(command, CommandManager.getServerDatagramChannel(), CommandManager.getSocketAddress());
+                    //CommandManager.ExecuteCommand(command, CommandManager.getServerDatagramChannel(), CommandManager.getSocketAddress());
+
+
+                    ///Client.sendCommand(command);
+                    ///if (command.isNeedObjectToExecute())
+                        ///Client.sendProduct(CommandManager.getProduct());
+
+                    client.addCommand(command);
+                    if (command.isNeedObjectToExecute())
+                        client.addProduct(CommandManager.getProduct());
+
                     //CommandManager.ExecuteCommand(Objects.requireNonNull(CommandManager.CommandDeterminator(nargs)), priorityQueue, commandsManager.getServerDatagramChannel(), commandsManager.getSocketAddress());
                     //command.execute();
                 } catch (IllegalArgumentException e) {
                     System.out.println("Ошибка выполнения команды \"" + commandName + "\". Проверьте, правильно вы ввели аргумент команды.");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
             }
         }catch (NoSuchElementException e){

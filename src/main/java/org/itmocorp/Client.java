@@ -2,6 +2,7 @@ package org.itmocorp;
 
 
 import org.itmocorp.controller.commands.AbstractCommand;
+import org.itmocorp.controller.handlers.ScriptHandler;
 import org.itmocorp.controller.managers.CommandManager;
 import org.itmocorp.model.data.Product;
 
@@ -13,6 +14,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -22,9 +24,12 @@ import java.util.Scanner;
  * @author Alexey Volkov P3113
  */
 public class Client implements Runnable{
-    private DatagramChannel datagramChannel;
-    private SocketAddress socketAddress;
+    private static DatagramChannel datagramChannel;
+    private static SocketAddress socketAddress;
     private Selector selector;
+
+    ArrayList<AbstractCommand> arrayList = new ArrayList<>();
+    ArrayList<Product> arrayListPr = new ArrayList<>();
 
 
     public Client() throws IOException {
@@ -84,7 +89,7 @@ public class Client implements Runnable{
      * @throws IOException IOException
      */
 
-    private void sendCommand(AbstractCommand command) throws IOException {
+    public static void sendCommand(AbstractCommand command) throws IOException {
         ByteBuffer buffer = ByteBuffer.wrap(new Serialization().SerializeObject(command));
 //      System.out.println("Отправляем команду " + command);
         datagramChannel.send(buffer, socketAddress);
@@ -100,13 +105,19 @@ public class Client implements Runnable{
      * @param product объект класса Product
      * @throws IOException IOException
      */
-    private void sendProduct(Product product) throws IOException {
+    public static void sendProduct(Product product) throws IOException {
         ByteBuffer buffer = ByteBuffer.wrap(new Serialization().SerializeObject(product));
 //        System.out.println("Отправляем объект " + spaceMarine);
         datagramChannel.send(buffer, socketAddress);
     }
 
+    public void addCommand(AbstractCommand command) {
+        arrayList.add(command);
+    }
 
+    public void addProduct(Product product) {
+        arrayListPr.add(product);
+    }
 
 
     @Override
@@ -129,12 +140,31 @@ public class Client implements Runnable{
                     if (selectionKey.isWritable()) {
                         datagramChannel.register(selector, SelectionKey.OP_READ);
 //                        System.out.println("Writable");
-                        AbstractCommand command = CommandManager.CommandDeterminator(scanner.nextLine().trim().split("\\s+"));
-                        sendCommand(command);
-                        if (command != null && command.isNeedObjectToExecute()) {
-                            sendProduct(CommandManager.getProduct());
+                        if (arrayList.size() == 0) {
+                            AbstractCommand command = CommandManager.CommandDeterminator(scanner.nextLine().trim().split("\\s+"));
+                            if (command != null && command.getName().equals("executeScript")) {   // команда executeScript будет иметь свою логику(из нее будут доставаться команды и далее посылаться)
+                                if (command.getArgs().length != 0) {
+                                    ScriptHandler.startFile(command.getArgs()[0], this);
+                                }else{
+                                    System.out.println("Данная команда требует указание пути к файлу исполняемого скрипта.");
+                                }
+                            }
+                            else if (command != null) {
+                                addCommand(command);
+                                if (command.isNeedObjectToExecute()) {
+                                    addProduct(CommandManager.getProduct());
+                                }
+                            }
                         }
-
+                        if (arrayList.size() > 0) {
+                            AbstractCommand current = arrayList.get(0);
+                            sendCommand(current);
+                            if (current != null && current.isNeedObjectToExecute()) {
+                                sendProduct(arrayListPr.get(0));
+                                arrayListPr.remove(0);
+                            }
+                            arrayList.remove(0);
+                        }
                     }
                 }
             }

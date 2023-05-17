@@ -15,7 +15,7 @@ public class ExecuteScript extends AbstractCommand {
     @Override
     public void execute() {
         if (args.length != 0) {
-            ScriptHandler.startFile(args[0]);
+            //ScriptHandler.startFile(args[0]);
         }else{
             System.out.println("Данная команда требует указание пути к файлу исполняемого скрипта.");
         }
