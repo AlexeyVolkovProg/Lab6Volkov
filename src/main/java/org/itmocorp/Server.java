@@ -7,6 +7,7 @@ import org.itmocorp.model.data.Product;
 import org.itmocorp.model.managers.CollectionManager;
 
 import java.io.IOException;
+import java.io.PushbackInputStream;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -14,6 +15,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.Selector;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -66,13 +68,13 @@ public class Server implements Runnable{
         socketAddress = datagramChannel.receive(byteBuffer);  // получаем адрес сокета, с которого была получена информация, null в случае если нет доступных данных для чтения
         byteBuffer.flip();   // переключаем buffer в режим записи
         Scanner scanner = new Scanner(System.in);
+
         if (System.in.available() > 0) {
             if (scanner.nextLine().trim().equals("save")) {
                 Save save = new Save();
                 save.setArgs(new String[0]);
                 save.execute();
-            }
-            else {
+            } else {
                 System.out.println("Введена неверная серверная команда");
             }
         }

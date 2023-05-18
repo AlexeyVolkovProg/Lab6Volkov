@@ -2,6 +2,7 @@ package org.itmocorp;
 
 
 import org.itmocorp.controller.commands.AbstractCommand;
+import org.itmocorp.controller.commands.Save;
 import org.itmocorp.controller.handlers.ScriptHandler;
 import org.itmocorp.controller.managers.CommandManager;
 import org.itmocorp.model.data.Product;
@@ -16,6 +17,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -46,6 +48,10 @@ public class Client implements Runnable {
     public static void main(String args[]) {
         try {
             Client client = new Client();
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                // Код, который нужно выполнить при завершении работы программы
+                System.out.println("Клиент завершает свою работу");
+            }));
             client.connect("localhost", 1555);
             client.run();
         } catch (IOException e) {
@@ -181,6 +187,8 @@ public class Client implements Runnable {
             e.printStackTrace();
             System.out.println("Не удалось получить данные по указанному порту/сервер не доступен");
             run();
+        } catch (NoSuchElementException e) {
+            System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
         }

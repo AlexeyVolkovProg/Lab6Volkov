@@ -28,7 +28,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>org.itmocorp.Server</mainClass>
+                            <mainClass>org.itmocorp.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -51,7 +51,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.itmocorp.Server</mainClass>
+                            <mainClass>org.itmocorp.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
