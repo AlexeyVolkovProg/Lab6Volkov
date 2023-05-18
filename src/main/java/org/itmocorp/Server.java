@@ -115,9 +115,9 @@ public class Server implements Runnable{
             socketAddress = new InetSocketAddress(port);
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 // Код, который нужно выполнить при завершении работы программы
-                Save save = new Save();
-                save.setArgs(new String[0]);
-                save.execute();
+//                Save save = new Save();
+//                save.setArgs(new String[0]);
+//                save.execute();
                 System.out.println("Сервер завершает свою работу");
             }));
             try {

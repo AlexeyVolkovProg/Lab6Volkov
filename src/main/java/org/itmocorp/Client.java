@@ -141,7 +141,8 @@ public class Client implements Runnable {
         try {
             Scanner scanner = new Scanner(System.in);
             datagramChannel.register(selector, SelectionKey.OP_WRITE);
-            while (selector.select() > 0) {
+
+            while (selector.select(15000) > 0) {
                 Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
                 while (iterator.hasNext()) {
                     SelectionKey selectionKey = iterator.next();
@@ -160,7 +161,7 @@ public class Client implements Runnable {
                             AbstractCommand command = CommandManager.CommandDeterminator(scanner.nextLine().trim().split("\\s+"));
                             if (command != null && command.getName().equals("executeScript")) {   // команда executeScript будет иметь свою логику(из нее будут доставаться команды и далее посылаться)
                                 if (command.getArgs().length != 0) {
-                                    ScriptHandler.startFile(command.getArgs()[0], this);  // считываем команды из скрипта и внутри ScriptHandlera до
+                                    ScriptHandler.startFile(command.getArgs()[0], this);  // считываем команды из скрипта и внутри ScriptHandlera
                                 } else {
                                     System.out.println("Данная команда требует указание пути к файлу исполняемого скрипта.");
                                 }
@@ -190,8 +191,13 @@ public class Client implements Runnable {
             run();
         } catch (NoSuchElementException e) {
             System.exit(1);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("Превышено время ожидания от сервера");
+        arrayList.clear();
+        arrayListPr.clear();
+        run();
+
     }
 }
