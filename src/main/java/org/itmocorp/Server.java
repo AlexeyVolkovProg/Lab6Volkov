@@ -48,14 +48,7 @@ public class Server implements Runnable{
     public static void main(String[] args){
         Server server = new Server();
         server.setArgs(args);
-        logger.info("Запускаем работу сервера по порту " + port);
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            // Код, который нужно выполнить при завершении работы программы
-            Save save = new Save();
-            save.setArgs(new String[0]);
-            save.execute();
-            System.out.println("Сервер завершает свою работу");
-        }));
+        System.out.println("Запускаем работу сервера по порту " + port);
         server.run();
     }
 
@@ -70,12 +63,17 @@ public class Server implements Runnable{
         Scanner scanner = new Scanner(System.in);
 
         if (System.in.available() > 0) {
-            if (scanner.nextLine().trim().equals("save")) {
-                Save save = new Save();
-                save.setArgs(new String[0]);
-                save.execute();
-            } else {
-                System.out.println("Введена неверная серверная команда");
+            try {
+                if (scanner.nextLine().trim().equals("save")) {
+                    Save save = new Save();
+                    save.setArgs(new String[0]);
+                    save.execute();
+                } else {
+                    System.out.println("Введена неверная серверная команда");
+                }
+            } catch (NoSuchElementException e) { // проверка на символ остановки
+                System.exit(-1);
+                return;
             }
         }
         if (socketAddress != null){
@@ -115,6 +113,13 @@ public class Server implements Runnable{
             String fileSeparator = ",";
             CollectionManager collectionManager1 = new CollectionManager(filePath, fileSeparator);
             socketAddress = new InetSocketAddress(port);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                // Код, который нужно выполнить при завершении работы программы
+                Save save = new Save();
+                save.setArgs(new String[0]);
+                save.execute();
+                System.out.println("Сервер завершает свою работу");
+            }));
             try {
                 selector = Selector.open();
                 datagramChannel = DatagramChannel.open();

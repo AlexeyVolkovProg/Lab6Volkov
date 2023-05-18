@@ -164,6 +164,7 @@ public class Client implements Runnable {
                                 } else {
                                     System.out.println("Данная команда требует указание пути к файлу исполняемого скрипта.");
                                 }
+                                datagramChannel.register(selector, SelectionKey.OP_WRITE);
                             } else {// if (command != null) {
                                 addCommand(command);
                                 if (command != null && command.isNeedObjectToExecute()) {
@@ -184,7 +185,7 @@ public class Client implements Runnable {
                 }
             }
         } catch (PortUnreachableException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("Не удалось получить данные по указанному порту/сервер не доступен");
             run();
         } catch (NoSuchElementException e) {
