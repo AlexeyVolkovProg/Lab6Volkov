@@ -160,7 +160,7 @@ public class Client implements Runnable {
                             AbstractCommand command = CommandManager.CommandDeterminator(scanner.nextLine().trim().split("\\s+"));
                             if (command != null && command.getName().equals("executeScript")) {   // команда executeScript будет иметь свою логику(из нее будут доставаться команды и далее посылаться)
                                 if (command.getArgs().length != 0) {
-                                    ScriptHandler.startFile(command.getArgs()[0], this);  // todo сделать клиента статическим по-возможности
+                                    ScriptHandler.startFile(command.getArgs()[0], this);  // считываем команды из скрипта и внутри ScriptHandlera до
                                 } else {
                                     System.out.println("Данная команда требует указание пути к файлу исполняемого скрипта.");
                                 }

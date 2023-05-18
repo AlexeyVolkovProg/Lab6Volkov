@@ -12,6 +12,7 @@ public class UpdateId extends AbstractCommand {
     public UpdateId() {
         name = "updateId";
         help = "Обновить значение элемента коллекции, id которого равен заданному";
+        needObjectToExecute = true;
     }
 
 //    @Override
