@@ -48,7 +48,7 @@ public class CommandManager {
         commands.put("removeFirst", new RemoveFirst());
         commands.put("removeById", new RemoveById());
         commands.put("info", new Info());
-        commands.put("save", new Save());
+        //commands.put("save", new Save());
         commands.put("clear", new Clear());
         commands.put("printDescending", new PrintDescending());
         commands.put("help", new Help());
@@ -93,10 +93,6 @@ public class CommandManager {
         commandManager.setSocketAddress(socketAddress);
         //logger.info("Выполнение команды");
         command.execute();
-        int i=0;
-        while (i < 1000000) {
-            i++;
-        }
         if (!CommandManager.isScriptStatus()) {
             //logger.info("Отправляем клиенту сообщение о завершении чтения");
             datagramChannel.send(ByteBuffer.wrap("Конец ввода".getBytes()), socketAddress);

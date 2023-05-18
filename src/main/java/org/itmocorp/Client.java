@@ -23,7 +23,7 @@ import java.util.Scanner;
  *
  * @author Alexey Volkov P3113
  */
-public class Client implements Runnable{
+public class Client implements Runnable {
     private static DatagramChannel datagramChannel;
     private static SocketAddress socketAddress;
     private Selector selector;
@@ -43,8 +43,8 @@ public class Client implements Runnable{
      *
      * @param args аргументы командной строки
      */
-    public static void main(String args[]){
-        try{
+    public static void main(String args[]) {
+        try {
             Client client = new Client();
             client.connect("localhost", 1555);
             client.run();
@@ -107,14 +107,24 @@ public class Client implements Runnable{
      */
     public static void sendProduct(Product product) throws IOException {
         ByteBuffer buffer = ByteBuffer.wrap(new Serialization().SerializeObject(product));
-//        System.out.println("Отправляем объект " + spaceMarine);
         datagramChannel.send(buffer, socketAddress);
     }
 
+
+    /**
+     * Метод для добавления команд в очередь
+     *
+     * @param command
+     */
     public void addCommand(AbstractCommand command) {
         arrayList.add(command);
     }
 
+    /**
+     * Метод для добавления продуктов в очередь
+     *
+     * @param product
+     */
     public void addProduct(Product product) {
         arrayListPr.add(product);
     }
@@ -131,7 +141,7 @@ public class Client implements Runnable{
                     SelectionKey selectionKey = iterator.next();
                     iterator.remove();
                     if (selectionKey.isReadable()) {
-//                        System.out.println("Readable");
+//                      System.out.println("Readable");
                         String answer = receiveAnswer();
                         if (answer.contains("Конец ввода"))
                             datagramChannel.register(selector, SelectionKey.OP_WRITE);
@@ -144,14 +154,13 @@ public class Client implements Runnable{
                             AbstractCommand command = CommandManager.CommandDeterminator(scanner.nextLine().trim().split("\\s+"));
                             if (command != null && command.getName().equals("executeScript")) {   // команда executeScript будет иметь свою логику(из нее будут доставаться команды и далее посылаться)
                                 if (command.getArgs().length != 0) {
-                                    ScriptHandler.startFile(command.getArgs()[0], this);
-                                }else{
+                                    ScriptHandler.startFile(command.getArgs()[0], this);  // todo сделать клиента статическим по-возможности
+                                } else {
                                     System.out.println("Данная команда требует указание пути к файлу исполняемого скрипта.");
                                 }
-                            }
-                            else if (command != null) {
+                            } else {// if (command != null) {
                                 addCommand(command);
-                                if (command.isNeedObjectToExecute()) {
+                                if (command != null && command.isNeedObjectToExecute()) {
                                     addProduct(CommandManager.getProduct());
                                 }
                             }

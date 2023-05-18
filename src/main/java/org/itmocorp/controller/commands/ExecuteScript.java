@@ -1,6 +1,7 @@
 package org.itmocorp.controller.commands;
 
 import org.itmocorp.controller.handlers.ScriptHandler;
+import org.itmocorp.controller.managers.CommandManager;
 
 import java.io.File;
 
@@ -17,7 +18,7 @@ public class ExecuteScript extends AbstractCommand {
         if (args.length != 0) {
             //ScriptHandler.startFile(args[0]);
         }else{
-            System.out.println("Данная команда требует указание пути к файлу исполняемого скрипта.");
+            CommandManager.printToClient("Данная команда требует указание пути к файлу исполняемого скрипта.");
         }
     }
 }

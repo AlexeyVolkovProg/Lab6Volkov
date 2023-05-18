@@ -1,6 +1,7 @@
 package org.itmocorp;
 
 import org.itmocorp.controller.commands.AbstractCommand;
+import org.itmocorp.controller.commands.Save;
 import org.itmocorp.controller.managers.CommandManager;
 import org.itmocorp.model.data.Product;
 import org.itmocorp.model.managers.CollectionManager;
@@ -13,6 +14,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.Selector;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Scanner;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -45,6 +47,13 @@ public class Server implements Runnable{
         Server server = new Server();
         server.setArgs(args);
         logger.info("Запускаем работу сервера по порту " + port);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            // Код, который нужно выполнить при завершении работы программы
+            Save save = new Save();
+            save.setArgs(new String[0]);
+            save.execute();
+            System.out.println("Сервер завершает свою работу");
+        }));
         server.run();
     }
 
@@ -56,6 +65,17 @@ public class Server implements Runnable{
         byteBuffer.clear();
         socketAddress = datagramChannel.receive(byteBuffer);  // получаем адрес сокета, с которого была получена информация, null в случае если нет доступных данных для чтения
         byteBuffer.flip();   // переключаем buffer в режим записи
+        Scanner scanner = new Scanner(System.in);
+        if (System.in.available() > 0) {
+            if (scanner.nextLine().trim().equals("save")) {
+                Save save = new Save();
+                save.setArgs(new String[0]);
+                save.execute();
+            }
+            else {
+                System.out.println("Введена неверная серверная команда");
+            }
+        }
         if (socketAddress != null){
             Object object = new Serialization().DeserializeObject(byteBuffer.array()); // пытаемся десериализовать полученную команду
             if (object == null){
@@ -66,7 +86,7 @@ public class Server implements Runnable{
             }
             if (!object.getClass().getName().contains(".Product")){
                 command = (AbstractCommand) object;
-                System.out.println(" Сервер получил команду: " + command.getName());
+                ///System.out.println(" Сервер получил команду: " + command.getName());
                 // Сервер получил команду: " + command.getName()
                 if (!command.isNeedObjectToExecute()){
                     //Команда не требует объекта для выполнения. Начинаем выполнение

@@ -11,11 +11,11 @@ public class RemoveFirst extends AbstractCommand{
     @Override
     public void execute() {
         if (args.length == 0){
-            System.out.println("Команда RemoveFirst начала свое выполнение");
+            CommandManager.printToClient("Команда RemoveFirst начала свое выполнение");
             CommandManager.collection.remove(0);
-            System.out.println("Команда RemoveFirst начала свое выполнение");
+            CommandManager.printToClient("Команда RemoveFirst начала свое выполнение");
         }else{
-            System.out.println("Команда не принимает аргументы");
+            CommandManager.printToClient("Команда не принимает аргументы");
         }
     }
 }

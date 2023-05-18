@@ -9,13 +9,23 @@ public class Help extends AbstractCommand{
     }
 
     @Override
+//    public void execute() {
+//        if (args.length == 0){
+//            for (AbstractCommand abstractCommand : CommandManager.getCommands().values()){
+//                CommandManager.printToClient(abstractCommand.getName() + " " + abstractCommand.getHelp());
+//            }
+//        }else{
+//            CommandManager.printToClient("Данная команда не принимает аргументы");
+//        }
+//    }
     public void execute() {
-        if (args.length == 0){
-            for (AbstractCommand abstractCommand : CommandManager.getCommands().values()){
-                System.out.println(abstractCommand.getName() + " " + abstractCommand.getHelp());
-            }
-        }else{
-            System.out.println("Данная команда не принимает аргументы");
+        if (args.length == 0) {
+            CommandManager.getCommands().values().stream()
+                    .map(abstractCommand -> abstractCommand.getName() + " " + abstractCommand.getHelp())
+                    .forEach(CommandManager::printToClient);
+        } else {
+            CommandManager.printToClient("Данная команда не принимает аргументы");
         }
     }
+
 }

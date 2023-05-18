@@ -12,15 +12,26 @@ public class PrintDescending extends AbstractCommand {
         name = "printDescending";
         help = "Выводит элементы коллекции в порядке убывания.";
     }
+//    @Override
+//    public void execute() {
+//        if (args.length == 0) {
+//            CommandManager.collection
+//                    .stream()
+//                    .sorted((p1, p2) -> (int) (p2.getPrice() - p1.getPrice()))
+//                    .forEach(System.out::println);
+//        }else{
+//            CommandManager.printToClient("Данная команда не принимает аргументы");
+//        }
+//    }
     @Override
     public void execute() {
         if (args.length == 0) {
             CommandManager.collection
                     .stream()
                     .sorted((p1, p2) -> (int) (p2.getPrice() - p1.getPrice()))
-                    .forEach(System.out::println);
-        }else{
-            System.out.println("Данная команда не принимает аргументы");
+                    .forEach(product -> CommandManager.printToClient(product.toString()));
+        } else {
+            CommandManager.printToClient("Данная команда не принимает аргументы");
         }
     }
 }

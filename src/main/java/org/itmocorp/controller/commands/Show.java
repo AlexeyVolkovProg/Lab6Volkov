@@ -16,9 +16,12 @@ public class Show extends AbstractCommand{
             if (CommandManager.collection.size() == 0) {
                 CommandManager.printToClient("На данный момент коллекция пуста");
             }else{
-                for (Product x : CommandManager.collection) {
-                    CommandManager.printToClient(x.toString());
-                }
+//                for (Product x : CommandManager.collection) {
+//                    CommandManager.printToClient(x.toString());
+//                }
+                CommandManager.collection.stream()
+                        .map(Product::toString)
+                        .forEach(CommandManager::printToClient);
             }
         }else{
             CommandManager.printToClient("Данная команда не принимает аргументы.");

@@ -17,28 +17,28 @@ public class AddIfMax extends AbstractCommand{
 
     @Override
     public void execute() {
-        System.out.println("Была вызвана команда AddIfMax");
+        CommandManager.printToClient("Была вызвана команда AddIfMax");
         if (args.length == 0) {
             if (!CommandManager.isScriptStatus()) {
                 Product product = InputHandler.ArgumentsReader();
                 if (product != null && product.compareTo(Collections.max(CommandManager.collection)) > 0) {
                     CommandManager.collection.add(product);
-                    System.out.println("Новый объект был успешно добавлен в вашу коллекцию");
+                    CommandManager.printToClient("Новый объект был успешно добавлен в вашу коллекцию");
                 }else{
-                    System.out.println("Новый объект не был добавлен в коллекцию, так не удалось его сформировать или его значение не превышало значение максимального элемента коллекции");
+                    CommandManager.printToClient("Новый объект не был добавлен в коллекцию, так не удалось его сформировать или его значение не превышало значение максимального элемента коллекции");
                 }
             } else {
                 Product product = ScriptHandler.getProductFromFile();
                 if (product != null && product.compareTo(Collections.max(CommandManager.collection)) > 0) {
                     CommandManager.collection.add(product);
-                    System.out.println("Новый объект был успешно добавлен в вашу коллекцию");
+                    CommandManager.printToClient("Новый объект был успешно добавлен в вашу коллекцию");
                 }else{
-                    System.out.println("Новый объект не был добавлен в коллекцию, так не удалось его сформировать или его значение не превышало значение максимального элемента коллекции");
+                    CommandManager.printToClient("Новый объект не был добавлен в коллекцию, так не удалось его сформировать или его значение не превышало значение максимального элемента коллекции");
                 }
             }
         }else{
-            System.out.println("На данном этапе команда не принимает аргументы.");
+            CommandManager.printToClient("На данном этапе команда не принимает аргументы.");
         }
-        System.out.println("Команда AddIfMax закончила свое выполнение.");
+        CommandManager.printToClient("Команда AddIfMax закончила свое выполнение.");
     }
 }
